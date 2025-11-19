@@ -1,0 +1,11 @@
+# Enforce Unix style line endings
+* text=auto eol=lf
+
+# binary files
+*.png binary
+*.jpg binary
+*.jar binary
+*.ap_ binary
+
+# Keep gradlew as LF (Crucial for CI/CD and Linux)
+gradlew text eol=lf
