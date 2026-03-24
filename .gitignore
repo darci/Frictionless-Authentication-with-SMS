@@ -1,15 +1,62 @@
+# ========================
+# Android / Gradle
+# ========================
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
+*.hprof
+.gradle/
+/build/
+/app/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+local.properties
+
+# ========================
+# Android Studio / IntelliJ IDEA
+# ========================
+/.idea/caches/
+/.idea/libraries/
+/.idea/shelf/
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/studiobot.xml
+/.idea/copilot.data.migration.*.xml
+/.idea/.name
+
+# ========================
+# Kotlin
+# ========================
+/.kotlin/
+
+# ========================
+# OS
+# ========================
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+Thumbs.db
+Desktop.ini
+*.swp
+*~
+
+# ========================
+# Keystore (nunca versionar!)
+# ========================
+*.jks
+*.keystore
+signing.properties
+
+# ========================
+# Google Services (contém API keys)
+# ========================
+google-services.json
+
+# ========================
+# Misc
+# ========================
+*.log
+*.tmp
+*.bak
+.env
+quota
