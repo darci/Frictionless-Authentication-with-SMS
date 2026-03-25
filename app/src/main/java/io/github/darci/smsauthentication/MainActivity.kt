@@ -1,6 +1,7 @@
 package io.github.darci.smsauthentication
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,9 +15,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import io.github.darci.smsauthentication.data.util.AppSignatureHelper
 import io.github.darci.smsauthentication.presentation.navigation.Routes
 import io.github.darci.smsauthentication.presentation.otp.OtpVerificationScreen
 import io.github.darci.smsauthentication.presentation.otp.OtpViewModel
+import io.github.darci.smsauthentication.presentation.otp.OtpViewModelFactory
 import io.github.darci.smsauthentication.presentation.phone.PhoneNumberScreen
 import io.github.darci.smsauthentication.presentation.phone.PhoneNumberViewModel
 import io.github.darci.smsauthentication.presentation.phone.PhoneNumberViewModelFactory
@@ -26,6 +29,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Log do app hash para uso no SMS de teste (somente debug)
+        val appHashes = AppSignatureHelper.getAppSignatures(this)
+        Log.d("MainActivity", "App hash para SMS Retriever: $appHashes")
+
         setContent {
             FrictionlessAuthenticationWithSMSTheme {
                 val navController = rememberNavController()
@@ -54,7 +62,9 @@ class MainActivity : ComponentActivity() {
                                 navArgument("phoneNumber") { type = NavType.StringType }
                             )
                         ) {
-                            val viewModel: OtpViewModel = viewModel()
+                            val viewModel: OtpViewModel = viewModel(
+                                factory = OtpViewModelFactory(applicationContext)
+                            )
                             OtpVerificationScreen(viewModel = viewModel)
                         }
                     }

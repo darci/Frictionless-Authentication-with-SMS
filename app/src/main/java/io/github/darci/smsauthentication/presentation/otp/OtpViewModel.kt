@@ -3,16 +3,21 @@ package io.github.darci.smsauthentication.presentation.otp
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import io.github.darci.smsauthentication.domain.usecase.ListenForOtpUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel da tela de verificação OTP.
+ * Escuta SMS via SMS Retriever API para preenchimento automático do código.
  */
 class OtpViewModel(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val listenForOtpUseCase: ListenForOtpUseCase
 ) : ViewModel() {
 
     companion object {
@@ -25,6 +30,10 @@ class OtpViewModel(
     private val _uiState = MutableStateFlow(OtpUiState(phoneNumber = phoneNumber))
     val uiState: StateFlow<OtpUiState> = _uiState.asStateFlow()
 
+    init {
+        startListeningForSms()
+    }
+
     fun onEvent(event: OtpEvent) {
         when (event) {
             is OtpEvent.OtpCodeChanged -> onOtpCodeChanged(event.code)
@@ -33,8 +42,27 @@ class OtpViewModel(
         }
     }
 
+    /**
+     * Inicia a escuta do SMS Retriever para preenchimento automático.
+     */
+    private fun startListeningForSms() {
+        viewModelScope.launch {
+            listenForOtpUseCase().collect { result ->
+                result
+                    .onSuccess { otpCode ->
+                        Log.d(TAG, "OTP recebido via SMS: $otpCode")
+                        _uiState.update {
+                            it.copy(otpCode = otpCode, errorMessage = null)
+                        }
+                    }
+                    .onFailure { e ->
+                        Log.e(TAG, "Erro ao receber OTP via SMS", e)
+                    }
+            }
+        }
+    }
+
     private fun onOtpCodeChanged(code: String) {
-        // Aceita apenas dígitos, limitado ao comprimento do OTP
         val filtered = code.filter { it.isDigit() }.take(OTP_LENGTH)
         _uiState.update {
             it.copy(otpCode = filtered, errorMessage = null)
@@ -57,5 +85,7 @@ class OtpViewModel(
     private fun onResendClicked() {
         // TODO: Implementar reenvio de SMS via repositório
         Log.d(TAG, "Reenviando SMS para '${_uiState.value.phoneNumber}'")
+        // Reinicia o listener do SMS Retriever
+        startListeningForSms()
     }
 }
