@@ -17,7 +17,7 @@ Demonstrar um fluxo de autenticação simplificado onde o número de telefone do
 
 ## 🎬 Demo
 
-[Screen_recording_20260324_205906.webm](https://github.com/user-attachments/assets/fc9f7efa-9cd2-4919-ba87-7e058ece6a5a)
+[Screen_recording_20260324_214103.webm](https://github.com/user-attachments/assets/5f6085b5-c0e5-4e10-af2e-5c1fcca19d3d)
 
 > Vídeo demonstrando o fluxo completo: abertura do Phone Hint picker → seleção do número → preenchimento automático do campo.
 
