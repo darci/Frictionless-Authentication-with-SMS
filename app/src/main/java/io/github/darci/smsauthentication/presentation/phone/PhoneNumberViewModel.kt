@@ -96,6 +96,8 @@ class PhoneNumberViewModel(
             .onSuccess { number ->
                 Log.d(TAG, "Número selecionado: $number")
                 onPhoneNumberChanged(number)
+                // Navega automaticamente para a tela de OTP após selecionar o número
+                onSendSmsClicked()
             }
             .onFailure { e ->
                 Log.e(TAG, "Falha ao obter número de telefone", e)
