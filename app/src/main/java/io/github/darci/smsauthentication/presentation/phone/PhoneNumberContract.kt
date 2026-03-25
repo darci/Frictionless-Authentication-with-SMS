@@ -30,4 +30,7 @@ sealed class PhoneNumberEvent {
 sealed class PhoneNumberEffect {
     /** Solicita à UI que lance o IntentSender do Phone Hint picker. */
     data class LaunchPhoneHint(val intentSender: IntentSender) : PhoneNumberEffect()
+
+    /** Navegar para a tela de verificação OTP com o número de telefone. */
+    data class NavigateToOtp(val phoneNumber: String) : PhoneNumberEffect()
 }

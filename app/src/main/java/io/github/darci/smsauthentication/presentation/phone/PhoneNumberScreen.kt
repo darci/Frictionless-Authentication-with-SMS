@@ -33,11 +33,12 @@ import androidx.compose.ui.unit.dp
  * Responsabilidades:
  *  - Renderizar o [PhoneNumberUiState]
  *  - Disparar [PhoneNumberEvent]s para o [PhoneNumberViewModel]
- *  - Reagir a [PhoneNumberEffect]s (ex.: lançar o Phone Hint picker)
+ *  - Reagir a [PhoneNumberEffect]s (ex.: lançar o Phone Hint picker, navegar)
  */
 @Composable
 fun PhoneNumberScreen(
     viewModel: PhoneNumberViewModel,
+    onNavigateToOtp: (phoneNumber: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -58,6 +59,9 @@ fun PhoneNumberScreen(
                         .Builder(effect.intentSender)
                         .build()
                     phoneHintLauncher.launch(intentSenderRequest)
+                }
+                is PhoneNumberEffect.NavigateToOtp -> {
+                    onNavigateToOtp(effect.phoneNumber)
                 }
             }
         }
@@ -134,7 +138,7 @@ private fun PhoneNumberContent(
 
         Button(
             onClick = onSendSmsClicked,
-            enabled = uiState.isPhoneValid && !uiState.isLoading,
+            enabled = !uiState.isLoading,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = if (uiState.isLoading) "Enviando..." else "Enviar SMS")

@@ -69,18 +69,13 @@ class PhoneNumberViewModel(
 
     private fun onSendSmsClicked() {
         val currentNumber = _uiState.value.phoneNumber
-        val validation = validatePhoneNumberUseCase(currentNumber)
 
-        when (validation) {
-            is PhoneValidationResult.Valid -> {
-                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-                // TODO: Implementar envio de SMS via repositório
-                Log.d(TAG, "Enviando SMS para: $currentNumber")
-                _uiState.update { it.copy(isLoading = false, isSmsSent = true) }
-            }
-            is PhoneValidationResult.Invalid -> {
-                _uiState.update { it.copy(errorMessage = validation.reason) }
-            }
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            // TODO: Implementar envio real de SMS via repositório
+            Log.d(TAG, "Enviando SMS para: $currentNumber")
+            _uiState.update { it.copy(isLoading = false, isSmsSent = true) }
+            _effect.send(PhoneNumberEffect.NavigateToOtp(currentNumber))
         }
     }
 
