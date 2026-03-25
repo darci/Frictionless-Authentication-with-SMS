@@ -150,7 +150,26 @@ aO7RN58Cdxu"
 | Hash | **11 caracteres** na última linha — identifica o app |
 | Tamanho total | Máximo **140 bytes** |
 
-### Como descobrir o hash do seu app
+### Como descobrir o hash do seu app — `AppSignatureHelper`
+
+O SMS Retriever API exige que o SMS termine com um **hash de 11 caracteres** que identifica unicamente o app. Esse hash é calculado pela classe [`AppSignatureHelper`](app/src/main/java/io/github/darci/smsauthentication/data/util/AppSignatureHelper.kt).
+
+#### Como o hash é gerado
+
+```
+SHA-256( packageName + " " + certificadoDeAssinatura )
+    → trunca para 9 bytes
+    → codifica em Base64 (sem padding)
+    → pega os primeiros 11 caracteres
+```
+
+| Entrada | Valor |
+|---|---|
+| Package name | `io.github.darci.smsauthentication` |
+| Certificado | Signing key do APK (debug ou release) |
+| **Saída** | Ex.: `aO7RN58Cdxu` |
+
+#### Como obter o hash
 
 1. Execute o app no dispositivo/emulador
 2. Abra o **Logcat** no Android Studio
@@ -161,7 +180,14 @@ aO7RN58Cdxu"
    ```
 5. Use esse hash na última linha do SMS de teste
 
-> ⚠️ O hash muda entre **debug** e **release** (depende da signing key). Gere o hash correto para cada variante.
+> ⚠️ O hash muda entre **debug** e **release** porque cada build variant usa uma signing key diferente. Gere o hash correto para cada variante.
+
+#### Uso em produção
+
+Em produção, o `AppSignatureHelper` **não deve ser incluído no APK**. O hash deve ser:
+1. Gerado uma única vez com a signing key de release
+2. Configurado no **backend** que envia os SMS
+3. Removido do código do app (é um utilitário apenas para debug)
 
 ## 🔮 Próximos Passos
 
