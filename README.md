@@ -15,6 +15,14 @@ Demonstrar um fluxo de autenticação simplificado onde o número de telefone do
 - **Preenchimento automático** – O campo de telefone é preenchido automaticamente com o número selecionado no picker
 - **UI em Jetpack Compose** – Interface Material 3 com tema dinâmico (Dynamic Color no Android 12+)
 
+## 🎬 Demo
+
+https://github.com/user-attachments/assets/phone_hint_demo.webm
+
+<video src="docs/phone_hint_demo.webm" width="300" controls></video>
+
+> Vídeo demonstrando o fluxo completo: abertura do Phone Hint picker → seleção do número → preenchimento automático do campo.
+
 ## 🏗️ Arquitetura
 
 O projeto segue **MVVM + Clean Architecture** com separação em 3 camadas:
