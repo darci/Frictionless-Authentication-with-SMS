@@ -54,6 +54,8 @@ class OtpViewModel(
                         _uiState.update {
                             it.copy(otpCode = otpCode, errorMessage = null)
                         }
+                        // Valida automaticamente ao receber o OTP via SMS
+                        onVerifyClicked()
                     }
                     .onFailure { e ->
                         Log.e(TAG, "Erro ao receber OTP via SMS", e)
