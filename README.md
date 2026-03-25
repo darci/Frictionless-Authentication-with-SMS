@@ -127,21 +127,48 @@ app/src/main/java/io/github/darci/smsauthentication/
 ## 📱 Fluxo do Usuário
 
 1. Ao abrir o app, o **Phone Number Hint picker** é exibido automaticamente
-2. O usuário seleciona um número de telefone da lista (ou cancela)
-3. O campo de telefone é preenchido com o número selecionado
-4. O usuário pode editar o número manualmente
-5. Ao clicar em **"Enviar SMS"**, a validação é executada
+2. O usuário seleciona um número de telefone → **navega automaticamente para a tela de OTP**
+3. O SMS é recebido → **o código OTP é preenchido e verificado automaticamente**
 
 > **Nota:** O picker do Phone Hint não requer nenhuma permissão. Ele exibe apenas os números de telefone associados ao dispositivo.
+
+## 🧪 Simulando o envio de SMS (Emulador)
+
+Para testar o preenchimento automático do OTP no emulador, envie um SMS no formato do **SMS Retriever API** via `adb`:
+
+```bash
+adb emu sms send 5551234567 "<#> Seu código de verificação é: 123456
+aO7RN58Cdxu"
+```
+
+### Formato obrigatório do SMS
+
+| Parte | Regra |
+|---|---|
+| `<#>` | Prefixo obrigatório (identifica o SMS para o Retriever) |
+| Corpo | Texto livre contendo o código OTP de 6 dígitos |
+| Hash | **11 caracteres** na última linha — identifica o app |
+| Tamanho total | Máximo **140 bytes** |
+
+### Como descobrir o hash do seu app
+
+1. Execute o app no dispositivo/emulador
+2. Abra o **Logcat** no Android Studio
+3. Filtre por `AppSignatureHelper`
+4. O log mostrará:
+   ```
+   D/AppSignatureHelper: App hashes: [aO7RN58Cdxu]
+   ```
+5. Use esse hash na última linha do SMS de teste
+
+> ⚠️ O hash muda entre **debug** e **release** (depende da signing key). Gere o hash correto para cada variante.
 
 ## 🔮 Próximos Passos
 
 - [ ] Implementar envio real de SMS (ex.: Firebase Auth, Twilio)
-- [ ] Tela de verificação do código OTP
-- [ ] Injeção de dependência com **Hilt** (substituir a `ViewModelFactory` manual)
+- [ ] Injeção de dependência com **Hilt** (substituir as `ViewModelFactory` manuais)
 - [ ] Testes unitários para Use Cases e ViewModel
 - [ ] Testes de UI com Compose Testing
-- [ ] Navigation Compose para fluxo multi-telas
 - [ ] Modularização em módulos Gradle (`:domain`, `:data`, `:app`)
 
 ## 📄 Licença
