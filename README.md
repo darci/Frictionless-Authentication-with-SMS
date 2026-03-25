@@ -17,9 +17,7 @@ Demonstrar um fluxo de autenticação simplificado onde o número de telefone do
 
 ## 🎬 Demo
 
-https://github.com/user-attachments/assets/phone_hint_demo.webm
-
-<video src="docs/phone_hint_demo.webm" width="300" controls></video>
+[Screen_recording_20260324_205906.webm](https://github.com/user-attachments/assets/fc9f7efa-9cd2-4919-ba87-7e058ece6a5a)
 
 > Vídeo demonstrando o fluxo completo: abertura do Phone Hint picker → seleção do número → preenchimento automático do campo.
 
